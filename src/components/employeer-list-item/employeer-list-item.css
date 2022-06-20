@@ -3,10 +3,6 @@
     border-bottom: 1px solid #3d5a80;
 }
 
-.list-group-item:last-child {
-    border-bottom: none;
-}
-
 .list-group-item span {
     line-height: 35px;
     font-size: 20px;
