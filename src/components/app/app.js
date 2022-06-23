@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import nextId from 'react-id-generator';
 
 import AppInfo from '../app-info/app-info';
 import SearchPanel from '../search-panel/search-panel';
@@ -13,13 +14,11 @@ class App extends Component {
         super(props);
         this.state = {
             data: [
-                { name: 'John G.', salary: 800, increase: false, id: 1 },
-                { name: 'Alex M.', salary: 3000, increase: false, id: 2 },
-                { name: 'Glor N.', salary: 5000, increase: false, id: 3 }
+                { name: 'John G.', salary: 800, increase: false, rise: true, id: 1 },
+                { name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2 },
+                { name: 'Glor N.', salary: 5000, increase: false, rise: true, id: 3 }
             ]
         }
-
-        this.maxId = 4;
     }
 
     deleteItem = (id) => {
@@ -41,7 +40,8 @@ class App extends Component {
             name,
             salary,
             increase: false,
-            id: this.maxId++
+            rise: false,
+            id: nextId('person-')
         }
         this.setState(({ data }) => {
             const newArr = [...data, newItem];
@@ -52,11 +52,28 @@ class App extends Component {
         })
     }
 
+    onToggleProp = (id, prop) => {
+        this.setState(({ data }) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return { ...item, [prop]: !item[prop] }
+                }
+                return item;
+            })
+        }))
+    }
+
     render() {
         const { data } = this.state;
+
+        const employeer = data.length;
+        const employeerIncrease = data.filter(item => item.increase === true).length;
+
         return (
             <div className='app container'>
-                <AppInfo />
+                <AppInfo
+                    employeer={employeer}
+                    employeerIncrease={employeerIncrease} />
 
                 <div className="search-panel">
                     <SearchPanel />
@@ -65,7 +82,8 @@ class App extends Component {
 
                 <EmployeerList
                     data={data}
-                    onDelete={this.deleteItem} />
+                    onDelete={this.deleteItem}
+                    onToggleProp={this.onToggleProp} />
                 <EmployeerAddForm
                     data={data}
                     addItem={this.addItem} />
