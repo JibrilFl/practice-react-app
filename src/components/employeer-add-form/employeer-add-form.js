@@ -13,20 +13,24 @@ class EmployeerAddForm extends Component {
 
 
     onValueChange = (e) => {
-        this.setState({
+        this.setState(() => ({
             [e.target.name]: e.target.value
-        })
+        }))
+        if (e.target.getAttribute('name') === 'name' && this.state.name.length < 2) {
+            e.target.classList.add('red');
+        } else {
+            e.target.classList.remove('red');
+        }
     }
 
     onSubmit = (e) => {
         e.preventDefault();
-        if (this.state.name.length >= 3 && this.state.salary > 0) {
-            this.props.addItem(this.state.name, this.state.salary);
-            this.setState({
-                name: '',
-                salary: ''
-            })
-        }
+        if (this.state.name.length < 3 || !this.state.salary) return;
+        this.props.addItem(this.state.name, this.state.salary);
+        this.setState({
+            name: '',
+            salary: ''
+        })
     }
 
     render() {
