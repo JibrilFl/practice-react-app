@@ -96,6 +96,25 @@ class App extends Component {
         this.setState({ filter });
     }
 
+    onUpdateSalary = (id, salary) => {
+        if (salary.indexOf('$') > -1) {
+            salary = +salary.slice(0, -1);
+        }
+
+        if (isNaN(salary)) {
+            return
+        }
+
+        this.setState(({ data }) => ({
+            data: data.map(item => {
+                if (item.id === id) {
+                    return { ...item, salary: salary }
+                }
+                return item;
+            })
+        }))
+    }
+
     render() {
         const { data, term, filter } = this.state;
 
@@ -120,7 +139,8 @@ class App extends Component {
                 <EmployeerList
                     data={visibleData}
                     onDelete={this.deleteItem}
-                    onToggleProp={this.onToggleProp} />
+                    onToggleProp={this.onToggleProp}
+                    onUpdateSalary={this.onUpdateSalary} />
                 <EmployeerAddForm
                     data={data}
                     addItem={this.addItem} />
